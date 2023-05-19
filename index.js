@@ -51,7 +51,7 @@ async function run() {
       res.send(result);
     })
 
-    // find sub category for specific category
+    // find sub category of specific category
     app.get("/toySubCategory/:id", async (req, res) => {
       const id = req.params.id;
       const query = { categoryId: id }
@@ -64,6 +64,20 @@ async function run() {
       const toy = req.body;
       console.log(toy);
       const result = await toyCollection.insertOne(toy);
+      res.send(result);
+    })
+
+    // get all toy
+    app.get("/toys", async (req, res)=>{
+      const result = await toyCollection.find().toArray();
+      res.send(result);
+    })
+
+    // find a subcategory
+    app.get("/subCategory/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { subCategoryId: id }
+      const result = await toySubCategory.findOne(query);
       res.send(result);
     })
 
