@@ -1,0 +1,14 @@
+[
+    {
+        "categoryName": "Engineering Kits",
+        "categoryId": "01"
+    },
+    {
+        "categoryName": "Math Kits",
+        "categoryId": "03"
+    },
+    {
+        "categoryName": "Science Kits",
+        "categoryId": "03"
+    }
+]

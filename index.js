@@ -13,7 +13,7 @@ app.use(express.json());
 
 
 app.get("/", (req, res) => {
-    res.send("toys server is running ...");
+  res.send("toys server is running ...");
 })
 
 
@@ -36,15 +36,26 @@ async function run() {
     // Send a ping to confirm a successful connection
 
 
+    const toyCategory = client.db("marketplaceToy").collection("toyCategory");
+    const toySubCategory = client.db("marketplaceToy").collection("toySubCategory");
+    const toyCollection = client.db("marketplaceToy").collection("toys");
 
 
+    app.get("/toyCategory", async (req, res) => {
+      const result = await toyCategory.find().toArray();
+      res.send(result);
+    })
 
+    app.get("/toySubCategory", async (req, res) => {
+      const result = await toySubCategory.find().toArray();
+      res.send(result);
+    })
 
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
@@ -52,5 +63,5 @@ run().catch(console.dir);
 
 
 app.listen(PORT, () => {
-    console.log('Toys server is running on PORT: ', PORT);
+  console.log('Toys server is running on PORT: ', PORT);
 })
