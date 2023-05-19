@@ -1,7 +1,7 @@
 
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 
 
@@ -68,7 +68,7 @@ async function run() {
     })
 
     // get all toy
-    app.get("/toys", async (req, res)=>{
+    app.get("/toys", async (req, res) => {
       const result = await toyCollection.find().toArray();
       res.send(result);
     })
@@ -78,6 +78,25 @@ async function run() {
       const id = req.params.id;
       const query = { subCategoryId: id }
       const result = await toySubCategory.findOne(query);
+      res.send(result);
+    })
+
+    // find a toy
+    app.get("/toy/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await toyCollection.findOne(query);
+      res.send(result);
+    })
+
+    // find a user toys
+    app.get("/mytoy", async (req, res) => {
+      // console.log(req.headers.authorization);
+      let query = {};
+      if (req.query?.email) {
+        query = { sellerEmail: req.query.email };
+      }
+      const result = await toyCollection.find(query).toArray()
       res.send(result);
     })
 
