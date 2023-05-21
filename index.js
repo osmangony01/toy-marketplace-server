@@ -32,7 +32,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    client.connect();
     // Send a ping to confirm a successful connection
 
 
@@ -54,12 +54,12 @@ async function run() {
     // find sub category of specific category
     app.get("/toySubCategory/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { categoryId: id }
+      const query = { categoryId: id };
       const result = await toySubCategory.find(query).toArray();
       res.send(result);
     })
 
-    // // crate a toy
+    // crate a toy
     app.post("/addtoy", async (req, res) => {
       const toy = req.body;
       console.log(toy);
@@ -101,7 +101,6 @@ async function run() {
 
     // find a user toys
     app.get("/mytoy", async (req, res) => {
-      // console.log(req.headers.authorization);
       let query = {};
       if (req.query?.email) {
         query = { sellerEmail: req.query.email };
@@ -146,14 +145,13 @@ async function run() {
       res.send(result);
     })
 
-    // c Sort by price in ascending order
+    // Sort by price in ascending order
     app.get('/toyToPrice', async (req, res) => {
-
       //const sortedToys = await toyCollection.find().sort({ price: 1 }).collation({ locale: 'en_US', numericOrdering: true }).toArray(); 
       const sortedToys = await toyCollection.aggregate([
         {
           $match: {
-            sellerEmail: req.query.email // Filter by the specific product ID
+            sellerEmail: req.query.email 
           }
         },
         {
