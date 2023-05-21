@@ -89,6 +89,16 @@ async function run() {
       res.send(result);
     })
 
+    // find some toy using subCategoryId
+    app.get("/toys/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { subCategoryId: id }
+      const result = await toyCollection.find(query).toArray();
+      res.send(result);
+    })
+
+
+
     // find a user toys
     app.get("/mytoy", async (req, res) => {
       // console.log(req.headers.authorization);
@@ -126,12 +136,48 @@ async function run() {
       res.send(result);
     })
 
+    
+
     // delete a toy
     app.delete("/toy/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await toyCollection.deleteOne(query);
       res.send(result);
+    })
+
+    // c Sort by price in ascending order
+    app.get('/toyToPrice', async (req, res) => {
+
+      //const sortedToys = await toyCollection.find().sort({ price: 1 }).collation({ locale: 'en_US', numericOrdering: true }).toArray(); 
+      const sortedToys = await toyCollection.aggregate([
+        {
+          $match: {
+            sellerEmail: req.query.email // Filter by the specific product ID
+          }
+        },
+        {
+          $addFields: {
+            convertedPrice: {
+              $convert: {
+                input: "$price",
+                to: "double",
+                onError: 0,
+                onNull: 0
+              }
+            }
+          }
+        },
+        {
+          $sort: {
+            convertedPrice: 1
+          }
+        },
+        {
+          $unset: "convertedPrice"
+        }
+      ]).toArray();
+      res.json(sortedToys);
     })
 
     await client.db("admin").command({ ping: 1 });
